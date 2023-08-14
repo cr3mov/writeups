@@ -21,5 +21,6 @@ Just testing
 ```cpp
 int main() {
 	reinterpret_cast<volatile __int16*>(0x1337) ^= __rdtsc();
+	printf("meme\n");
 }
 ```
