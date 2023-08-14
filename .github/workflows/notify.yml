@@ -1,0 +1,27 @@
+# @credits: https://stackoverflow.com/a/67059629
+name: 'Sync'
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  notify:
+    name: 'Submodule Notify Parent'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Github REST API Call
+      env:
+        CI_TOKEN: ${{ secrets.CI_TOKEN }}
+        PARENT_REPO: cr3mov/temp-frontend
+        PARENT_BRANCH: master
+        WORKFLOW_ID: 66214200
+      run: |
+        curl -fL --retry 3 -X POST -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ env.CI_TOKEN }}" https://api.github.com/repos/${{ env.PARENT_REPO }}/actions/workflows/${{ env.WORKFLOW_ID }}/dispatches -d '{"ref":"${{ env.PARENT_BRANCH }}"}'
