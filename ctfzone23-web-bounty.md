@@ -156,14 +156,14 @@ Now we can join `CTFZone Private Program` program without problems. Our new task
     "title": "Very Secret Report~"
 }
 ```
-So, we need to iterator over the v1 uuid between `ad1cec14-3830-11ee-b365-0255ac100030` and `ad1d822a-3830-11ee-b365-0255ac100030`, but checking each id is not possible due to proof of work. Let's check how uuids are created. 
+So, we need to iterate over the v1 uuid between `ad1cec14-3830-11ee-b365-0255ac100030` and `ad1d822a-3830-11ee-b365-0255ac100030`, but checking each id is not possible due to proof of work. Let's check how uuids are created. 
 
 ```golang
 // A Time represents a time as the number of 100's of nanoseconds since 15 Oct 1582.
 timeLow := uint32(now & 0xffffffff)
 ```
 
-Since we know the report creation nanotime, we can easily reduce the search range. 
+Since we know the report creation time in nanoseconds, we can easily reduce the search range. 
 
 Corresponding uuid v1: `ad1cec14-3830-11ee-b365-0255ac100030`. Now we are ready to get the flag.
 
