@@ -5,11 +5,7 @@ description: "Author: @not_es3n1n"
 tags: ["rev", "ctfzone23"]
 ---
 
-## This post is to test zod transform
-
-If you open the file `src/content/post/unique-tags.md`, the tags array has a number of duplicate blog strings of various cases.
-
-These are removed as part of the removeDupsAndLowercase function found in `src/content/config.ts`.
+#### Something
 
 $$
 \begin{aligned}
