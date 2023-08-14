@@ -12,7 +12,7 @@ BB stands for Bounty the B4r. Our highly skilled specialists developed the best 
 Here's the most important code of our challenge.
 
 `golang/db/database.go`
-```golang
+```go
 func (db Database) InitFlagReport(flag string) error {
   ...
 	program := BBProgram{
@@ -39,7 +39,7 @@ func (db Database) InitFlagReport(flag string) error {
 ```
 
 `golang/controller/program.go`
-```golang
+```go
 func (s *server) PostProgramPUuidJoin(w http.ResponseWriter, r *http.Request, pUuid uuid.UUID) {
 	...
 	if bbProgram.Type == ProgramTypePrivate && user.Reputation < 100000 {
@@ -51,7 +51,7 @@ func (s *server) PostProgramPUuidJoin(w http.ResponseWriter, r *http.Request, pU
 ```
 
 `golang/controller/report.go`
-```golang
+```go
 func (s *server) GetReportRUuid(w http.ResponseWriter, r *http.Request, rUuid uuid.UUID, params api.GetReportRUuidParams) {
   ...
 	if bbProgram.Type == ProgramTypePrivate {
@@ -158,7 +158,7 @@ Now we can join `CTFZone Private Program` program without problems. Our new task
 ```
 So, we need to iterate over the v1 uuid between `ad1cec14-3830-11ee-b365-0255ac100030` and `ad1d822a-3830-11ee-b365-0255ac100030`, but checking each id is not possible due to proof of work. Let's check how uuids are created. 
 
-```golang
+```go
 // A Time represents a time as the number of 100's of nanoseconds since 15 Oct 1582.
 timeLow := uint32(now & 0xffffffff)
 ```
@@ -168,7 +168,7 @@ Since we know the report creation time in nanoseconds, we can easily reduce the 
 Corresponding uuid v1: `ad1cec14-3830-11ee-b365-0255ac100030`. Now we are ready to get the flag.
 
 #### Solver code
-```python
+```py
 import hashlib
 import requests
 import json
