@@ -7,7 +7,7 @@ tags: ["ctfzone23", "pwn"]
 
 #### Some decompiled code
 
-![img](pug.jpeg)
+![img](./pug.jpeg)
 
 Some code
 ```cpp
