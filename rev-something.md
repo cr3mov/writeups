@@ -22,5 +22,9 @@ Just testing
 int main() {
 	reinterpret_cast<volatile __int16*>(0x1337) ^= __rdtsc();
 	printf("meme\n");
+	switch(1337) {
+		case 0x1337:
+			break;
+	};
 }
 ```
