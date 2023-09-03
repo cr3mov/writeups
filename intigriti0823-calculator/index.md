@@ -199,32 +199,34 @@ $$
 We need a constant with a value of 13 here, lucky us we have localeCompare with the exact length of 13, so our equation looks like this: 
 
 $$
-\mathord{\sqsupset} x = |String.localeCompare.name|
-\\
-\lfloor e^{log_2(x)} \rfloor = 40
-\\
-\lceil e^{log_2(x)} \rceil = 41
+\begin{gather*}
+\mathord{\sqsupset} x = |String.localeCompare.name| \\
+\lfloor e^{\log_2(x)} \rfloor = 40 \\
+\lceil e^{\log_2(x)} \rceil = 41
+\end{gather*}
 $$
 
 So we can get `(` and `)` just by using the single equation, but the second problem comes in place, since `Array.push` returns the new length of `Math.seeds` we should definitely work around this because either way our `toString(radix)` would have `radix` ≠ 10. 
 
 $$
-\mathord{\sqsupset} y = 6
-\\
-\mathord{\sqsupset} x = ln(f(y))
-\\
+\begin{gather*}
+\mathord{\sqsupset} y = 6 \\
+\mathord{\sqsupset} x = \ln(f(y)) \\
 e^x \approx 10
+\end{gather*}
 $$
 
-The easiest way to get $x$ is $\sqrt{y} $ but we’ll get $e^x \approx 11$, we use `Math.expm1` function here, which implementation is $e^x - 1$. So our equation will look as follows:
+The easiest way to get x is sqrt(y), but we’ll get e^x ~= 11, we use `Math.expm1` function here, which implementation is e^x-1. So our equation will look as follows:
 
 $$
+\begin{gather*}
 \mathord{\sqsupset} y = |Math.seeds.length| \\
 \mathord{\sqsupset} x = \sqrt{y} \\
 e^x - 1 \approx 10
+\end{gather*}
 $$
 
-So, to get `()` in our result we use this function chain: `Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push`
+And to get `()` in our result we use this function chain: `Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push`
 
 Let’s put it in our q parameter to see if it would work
 
@@ -242,7 +244,7 @@ Now we need to shift the first element and push it to get `)alert(`
 
 `Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,Math.seeds.push,Math.acos,Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.cbrt,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.seeds.toString,Math.random.name.toString,Math.seeds.toString,Math.random.name.toString,Math.seeds.join`
 
-The new problem occurs when we have to create the `.` character, we will again rely on `String.fromCharCode`, now we need to get the value 46 from 15 somehow… Since $e$ is close enough to $2$ we can play with $e^x$ and $log_2(x)$. We’ve found the exact value of $x$ after different tests:
+The new problem occurs when we have to create the `.` character, we will again rely on `String.fromCharCode`, now we need to get the value 46 from 15 somehow… Since e is close enough to 2 we can play with e^x and log2(x). We’ve found the exact value of x after different tests:
 
 $$
 log_2(e^{32}) \approx 46
@@ -251,11 +253,11 @@ $$
 But how do we get 32 from 15? The easiest way to get 32 is by calling `Math.clz32(0)`, but how do we get the approximate value of 0? This is a trigonometric function.
 
 $$
-\mathord{\sqsupset} y = cos(15) \approx 0 
-\\
-\mathord{\sqsupset} x = Math.clz32(y)
-\\
+\begin{gather*}
+\mathord{\sqsupset} y = cos(15) \approx 0  \\
+\mathord{\sqsupset} x = Math.clz32(y) \\
 log_2(e^x) \approx 46
+\end{gather*}
 $$
 
 So now our payload has this part `Math.cos,Math.clz32,Math.exp,Math.log2,Math.abs.name.constructor.fromCharCode,Math.seeds.push`. 
