@@ -17,8 +17,8 @@ No, I'm real!
 
 #### Overview
 
-Once i opened the downloaded `.tar.gz` file i observed that there's an `.iso` file inside and once i mounted it i saw that it has a file structure that looked 
-like a fs structure of a DVD disc. So what i did is i dragged this `.iso` file to the VLC and got very surprised.
+Once I opened the downloaded `.tar.gz` file I observed that there was a `.iso` file inside and once I mounted it I saw that it had a file structure that looked 
+like the fs structure of a DVD. So what I did is I dragged this `.iso` file to the VLC and was very surprised.
 
 ![1](./img/1.png)
 
@@ -26,33 +26,33 @@ As you probably already figured, this task is a DVD image that has an interactiv
 
 #### Analysing
 
-_I'm gonna be completely honest, i never had any experience with all this DVD stuff before, so i had to spend a couple hours googling how to analyse this stuff first._
+_I'm gonna be completely honest, I never had any experience with all this DVD stuff before, so I had to spend a couple of hours googling how to analyse this stuff first._
 
-There a multiple types of DVD menus that i'm aware of:
+There a multiple types of DVD menus that I'm aware of:
 - Java menus
 - IGS Menus
 
-What i did first is i checked for any .jar files or just something that could remind me of java, but i didn't find anything and it meant that i was dealing with IGS menu.
+What I did first is I checked for any .jar files or just something that could remind me of Java, but I didn't find anything and it meant that I was dealing with the IGS menu.
 
-First step in IGS menu analysis is to download [BDEdit](https://bdedit.pel.hu/) and open up our mounted `BDMV\index.bdmv`
+The first step in IGS menu analysis is to download [BDEdit](https://bdedit.pel.hu/) and open up our mounted `BDMV\index.bdmv`
 
 ![2](./img/2.png)
 
-Looks scary, i know. What i did is, i checked the clip infos for the `und` streams. In order to do this i clicked at the `CLIPINFO` menu and found the `und` stream in the gui that contained our buttons logic.
+Looks scary, I know. What I did is, I checked the clip info for the `und` streams. To do this I clicked on the `CLIPINFO` menu and found the `und` stream in the GUI that contained our buttons logic.
 
 ![3](./img/3.png)
 
-Here, at the left top corner there's a combo box with clip selector, there are 96 clips and all of them have some buttons. 
+Here, at the left top corner, there's a combo box with a clip selector, there are 96 clips and all of them have some buttons. 
 
-When i double-clicked at the `und` stream, the menu with buttons opened up and i saw a lot of buttons and the disasm of the code that they're doing.
+When I double-clicked at the `und` stream, the menu with buttons opened up and I saw a lot of buttons and the disasm of the code that they were doing.
 
 ![4](./img/4.png)
 
-By messing around and guessing i found that first default valid button(`1FDE` on the screenshot) contains some random stuff that i wasn't interested in, and i should check others instead.
+By messing around and guessing I found that the first default valid button(`1FDE` on the screenshot) contains some random stuff that I wasn't interested in, and I should check others instead.
 
-In this asm(or w/e this stuff is called) there's a `Call Object **` instruction that basically just starts playing another menu that you provide as a first operand, knowing it, i started analysing what the other buttons are doing.
+In this asm(or w/e this stuff is called) there's a `Call Object **` instruction that just starts playing another menu that you provide as a first operand. Knowing it, I started analysing what the other buttons are doing.
 
-By observing all the other buttons i saw three types of buttons.
+By observing all the other buttons I saw three types of buttons.
 
 ---
 
@@ -76,36 +76,36 @@ Type 3.
 
 ![8](./img/8.png)
 
-This button is jumping to the clip 96, which i checked by playing the `BDMV\STREAM\00096.m2ts` file in VLC.
+This button is jumping to clip 96, which I checked by playing the `BDMV\STREAM\00096.m2ts` file in VLC.
 
 ![9](./img/9.png)
 
 ---
 
-After that i knew that there are only three destinations from the first menu
+After that, I knew that there were only three destinations on the first menu
 * Clip 1
 * Clip 48
 * Clip 96 (`WRONG...`) 
 
-When i checked the menu buttons for clip 1 the pattern looked still the same so i checked menu 48 instead, and on the clip 48 all the menu buttons were doing the same thing, jumping to menu 48 (or 96).
+When I checked the menu buttons for clip 1 the pattern looked still the same so I checked menu 48 instead, and on clip 48 all the menu buttons were doing the same thing, jumping to menu 48 (or 96).
 
-Seems odd, huh? I investigated it a bit and it seemed like we would always end up on the menu 96 if we are on the menu thats index is >= 48.
+Seems odd, huh? I investigated it a bit and it seemed like we would always end up on the menu 96 if we are on the menu that's index is >= 48.
 
-There's one exception though, that i just guessed. Remember how i opened a stream 96 in vls? Well, i did the same thing for clip 95 and got this.
+There's one exception though, that I just guessed. Remember how I opened stream 96 in vlc? Well, I did the same thing for clip 95 and got this.
 
 ![10](./img/10.png)
 
-From now on the solving of this challenge looked really trivial, i needed to parse all the clips and find what buttons are leading us to the clip 95.
+From now on solving this challenge looked trivial, I needed to parse all the clips and find what buttons were leading us to clip 95.
 
 #### Solving
 
-While the idea is easy enough, i struggled for a half an hour trying to parse the clips.
+While the idea was easy enough, I struggled for half an hour trying to parse the clips.
 
-I tried really many things/libs to parse the clips and extract this bytecode from them but none of them really worked so i decided that i should just do it by myself.
+I tried many things/libs to parse the clips and extract this bytecode from them but none of them worked so I decided that i should just do it by myself.
 
 ![11](./img/11.png)
 
-What i did is i grabbed the `Call Object` instruction opcode (`21820000`), converted it to BE bytes and searched in HxD within all the files from the disk.
+What I did is I grabbed the `Call Object` instruction opcode (`21820000`), converted it to BE bytes and searched in HxD within all the files from the disk.
 
 ```py
 >>> [hex(x) for x in int.to_bytes(0x21820000, 4, 'big')]
@@ -113,11 +113,11 @@ What i did is i grabbed the `Call Object` instruction opcode (`21820000`), conve
 >>>
 ```
 
-I end up in the same m2ts files and got a lot of occurencies, from now on i assumed that this bytecode is indeed stored in the same file as the stream itself, so i should've parsed it from these files
+I ended up in the same m2ts files and got a lot of occurrences, from now on I assumed that this bytecode is indeed stored in the same file as the stream itself, so I should've parsed it from these files
 
 ![12](./img/12.png)
 
-The whole assembled instruction from this asm looks like this.
+The whole assembled instruction from this ASM looks like this.
 ```js
 >───────┐ ┌───────┐ ┌───────> │
 2182 0000 0000 0030 0000 0000 │ !......0....
@@ -137,7 +137,7 @@ INSN_SIZE = OPCODE_SIZE + (OPERAND_SIZE * 2)
 CALL_OBJECT = b'\x21\x82\x00\x00'  # Call Object {DST}
 ```
 
-After that i iterated over the first 47 streams and extracted their buttons.
+After that, I iterated over the first 47 streams and extracted their buttons.
 ```py
 # Returns { button_id: jmp_to }
 def parse_buttons(mnu_data: bytes) -> dict[int, int]:
@@ -154,7 +154,7 @@ def parse_buttons(mnu_data: bytes) -> dict[int, int]:
         # Move next iter
         start_off = s + INSN_SIZE
 
-        # Read current chunk and extract op1 from it
+        # Read the current chunk and extract op1 from it
         chunk = mnu_data[s:s + INSN_SIZE]
         op1 = int.from_bytes(chunk[4:8], 'big')
 
@@ -180,7 +180,7 @@ for menu in p2.iterdir():
     menus[menu_id] = parse_buttons(content)
 ```
 
-At this point i already had all the playlists and parsed buttons from these playlists. To make the other logic a bit easier to implement, i collected all the successors and predecessors for menus into a separate dicts.
+At this point, I already had all the playlists and parsed buttons from these playlists. To make the other logic a bit easier to implement, I collected all the successors and predecessors for menus into separate dicts.
 ```py
 # menu index -> possible exits
 menus_possibilities: dict[int, list[int]] = dict()
@@ -203,7 +203,7 @@ for key in sorted(menus.keys()):
         menus_possibilities[key].append(possible_value)
 ```
 
-And noooow, i _finally_ solved the challenge by finding a path from menu 0 to the menu 95.
+And now, I _finally_ solved the challenge by finding a path from menu 0 to menu 95.
 ```py
 # menu -> button
 path: dict[int, int] = dict()
@@ -227,7 +227,7 @@ for k, v in menus_possibilities.items():
     print('[+] Menu:', k, 'Button:', path[k], 'Next:', tgt)
 ```
 
-By looking at the output i tried to guess what alphabet i needed to use in order to convert these button ids to the characters.
+By looking at the output i tried to guess what alphabet i needed to use to convert these button ids to characters.
 ```js
 [+] Menu: 0 Button: 21 Next: 1
 [+] Menu: 1 Button: 12 Next: 2
@@ -253,7 +253,7 @@ And oh well, when i tried to concat it to one string `1234567890QWERTYUIOPASDFGH
 >>>
 ```
 
-So what i did is i just grabbed all the button ids and converted them to the chars using this alphabet.
+So what i did is i just grabbed all the button IDs and converted them to the chars using this alphabet.
 ```py
 ALPHABET = '1234567890QWERTYUIOPASDFGHJKL{ZXCVBNM_-}'
 FLAG: str = ''
