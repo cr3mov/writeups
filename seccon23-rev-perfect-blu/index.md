@@ -31,7 +31,7 @@ Pressing the `CHECK` button shows either `SUCCESS` or `WRONG...` message, depend
 _I'm gonna be completely honest, I've never had any experience with all this DVD stuff before, so I had to spend a couple of hours googling how to analyse this stuff first._
 
 Apparently, there are multiple types of DVD menus:
-- Java menus
+- Java Menus
 - IGS Menus
 
 I first checked for any `.jar` files (or anything at all Java-related), but found nothing, which meant that I was dealing with IGS menu.
@@ -40,8 +40,8 @@ The first step in IGS menu analysis is to download [BDEdit](https://bdedit.pel.h
 
 ![2](./img/2.png)
 
-Looks scary, I know.
-The first thing I did was to check the stream's first clip info, looking for any bytecode or anything else of interest. 
+Looks scary. I know.
+The first thing I did was to check the stream's first clip information, looking for any bytecode or anything else of interest. 
 I did this by clicking on the `CLIPINFO` menu.
 
 ![3](./img/3.png)
@@ -50,7 +50,7 @@ Here, at the top left corner, there's a combo box with a clip selector.
 There are 96 clips and all of them have some buttons. 
 
 Within that menu, I reviewed each stream and identified the `und` stream which appeared to store the bytecode. 
-When I double-clicked on it, the menu with buttons opened up and I saw a lot of buttons and the disasm of the code that they were doing:
+When I double-clicked on it, the menu with buttons opened up and I saw a lot of buttons and the disassembly of the code that they were doing:
 
 ![4](./img/4.png)
 
@@ -94,9 +94,9 @@ At this point, I knew that there were only three destinations in the first menu
 * Clip 48
 * Clip 96 (`WRONG...`) 
 
-When exploring other clips(1, 48) in VLC, all seemed to show the same controls prompting for flag.
+When exploring other clips(1, 48) in VLC, all seemed to show the same controls prompting for the flag.
 
-Let's define this behaviour as a pattern that we can then match with other menus:
+Let's define this behavior as a pattern that we can then match with other menus:
 * Jump to `CURRENT + 1` (1, in this case)
 * Jump to `96` (`WRONG...`)
 * Jump to `CURRENT + 48` (48, in this case)
@@ -295,7 +295,7 @@ for k, v in path.items():
 print('[+] Flag:', FLAG)
 ```
 
-Which _finally_ yielded me the flag.
+Which _finally_ produced the flag.
 
 
 #### Flag
