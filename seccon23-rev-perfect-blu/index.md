@@ -65,6 +65,7 @@ This button jumps from our current menu(`0`) to the menu `48`.
 ---
 
 Type 2.
+
 ![7](./img/7.png)
 
 This button jumps from our current menu(`0`) to the next menu (`1`).
@@ -72,6 +73,7 @@ This button jumps from our current menu(`0`) to the next menu (`1`).
 ---
 
 Type 3.
+
 ![8](./img/8.png)
 
 This button is jumping to the clip 96, which i checked by playing the `BDMV\STREAM\00096.m2ts` file in VLC.
