@@ -12,7 +12,7 @@ Perfect Blu (135 pt)
 
 No, I'm real!
 
-[perfect-blu.tar.gz](./challenge/perfect-blu.tar.gz) 367b6ed67dda0afbbc975ee70ee946b4c7bf9268
+[perfect-blu.tar.gz](https://github.com/cr3mov/writeups/blob/master/seccon23-rev-perfect-blu/challenge/perfect-blu.tar.gz) 367b6ed67dda0afbbc975ee70ee946b4c7bf9268
 
 
 #### Overview
