@@ -101,9 +101,9 @@ Let's define this behavior as a pattern that we can then match with other menus:
 * Jump to `96` (`WRONG...`)
 * Jump to `CURRENT + 48` (48, in this case)
 
-I didn't want to end up on scene 96, so i checked the menus 1 and 48.
+I didn't want to end up on scene 96, so I checked the menus 1 and 48.
 
-When i opened up the menu 1 in BDEdit i clearly saw the same pattern that i saw in menu 0.
+When I opened up the menu 1 in BDEdit I clearly saw the same pattern that I saw in menu 0.
 
 Moving on to menu 48, and the pattern observed was mostly the same, but there were only 2 type of buttons:
 * Jump to `CURRENT + 1` (49)
