@@ -108,6 +108,7 @@ When i opened up the menu 1 in BDEdit i clearly saw the same pattern that i saw 
 Moving on to menu 48, and the pattern observed was mostly the same, but there were only 2 type of buttons:
 * Jump to `CURRENT + 1` (49)
 * Jump to `96` (`WRONG`)
+
 Basically, the 2 types of buttons got merged and it was jumping to only 2 destinations.
 
 Seems odd, huh? 
