@@ -1,7 +1,7 @@
 ---
 title: "seccon23 rev/Perfect Blu"
 publishDate: "18 Sep 2023"
-description: "Author: es3n1n"
+description: "Author: es3n1n / Editor: teidesu"
 tags: ["rev", "seccon23"]
 ---
 
