@@ -50,7 +50,10 @@ When I double-clicked at the `und` stream, the menu with buttons opened up and I
 
 By messing around and guessing I found that the first default valid button(`1FDE` on the screenshot) contains some random stuff that I wasn't interested in, and I should check others instead.
 
-In this asm(or w/e this stuff is called) there's a `Call Object **` instruction that just starts playing another menu that you provide as a first operand. Knowing it, I started analysing what the other buttons are doing.
+![13](./img/13.png)
+
+In this bytecode there's a `Call Object **` instruction with opcode `21820000` and only one operand, that just starts playing another menu that you provide as its first operand. Knowing this, I started analysing what the other buttons were doing.
+
 
 By observing all the other buttons I saw three types of buttons.
 
