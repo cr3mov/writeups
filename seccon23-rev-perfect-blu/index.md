@@ -6,7 +6,7 @@ tags: ["rev", "seccon23"]
 ---
 
 
-#### Description
+## Description
 
 Perfect Blu (135 pt)
 
@@ -17,110 +17,129 @@ No, I'm real!
 
 #### Overview
 
-Once I opened the downloaded `.tar.gz` file I observed that there was a `.iso` file inside and once I mounted it I saw that it had a file structure that looked 
-like the fs structure of a DVD. So what I did is I dragged this `.iso` file to the VLC and was very surprised.
+Once I opened the downloaded `.tar.gz` file, I noticed there was a `.iso` file inside. 
+When I mounted it, I saw that it had a file structure that looked like fs structure of a DVD. 
+I then dragged this `.iso` file into VLC and got very surprised
 
 ![1](./img/1.png)
 
-As you probably already figured, this task is a DVD image that has an interactive menu where you need to enter the flag, press on the `CHECK` button and, depending on the flag it would, either show a `SUCCESS` or a `WRONG...` message.
+As you have probably already figured out, this task is a DVD image with an interactive menu asking you to enter the flag.
+Pressing the `CHECK` button shows either `SUCCESS` or `WRONG...` message, depending on the flag entered
 
 #### Analysing
 
-_I'm gonna be completely honest, I never had any experience with all this DVD stuff before, so I had to spend a couple of hours googling how to analyse this stuff first._
+_I'm gonna be completely honest, I've never had any experience with all this DVD stuff before, so I had to spend a couple of hours googling how to analyse this stuff first._
 
-There a multiple types of DVD menus that I'm aware of:
+Apparently, there are multiple types of DVD menus:
 - Java menus
 - IGS Menus
 
-What I did first is I checked for any .jar files or just something that could remind me of Java, but I didn't find anything and it meant that I was dealing with the IGS menu.
+I first checked for any `.jar` files (or anything at all Java-related), but found nothing, which meant that I was dealing with IGS menu.
 
 The first step in IGS menu analysis is to download [BDEdit](https://bdedit.pel.hu/) and open up our mounted `BDMV\index.bdmv`
 
 ![2](./img/2.png)
 
-Looks scary, I know. What I did is, I checked the clip info for the `und` streams. To do this I clicked on the `CLIPINFO` menu and found the `und` stream in the GUI that contained our buttons logic.
+Looks scary, I know.
+The first thing I did was to check the stream's first clip info, looking for any bytecode or anything else of interest. 
+I did this by clicking on the `CLIPINFO` menu.
 
 ![3](./img/3.png)
 
-Here, at the left top corner, there's a combo box with a clip selector, there are 96 clips and all of them have some buttons. 
+Here, at the top left corner, there's a combo box with a clip selector.
+There are 96 clips and all of them have some buttons. 
 
-When I double-clicked at the `und` stream, the menu with buttons opened up and I saw a lot of buttons and the disasm of the code that they were doing.
+Within that menu, I reviewed each stream and identified the `und` stream which appeared to store the bytecode. 
+When I double-clicked on it, the menu with buttons opened up and I saw a lot of buttons and the disasm of the code that they were doing:
 
 ![4](./img/4.png)
 
-By messing around and guessing I found that the first default valid button(`1FDE` on the screenshot) contains some random stuff that I wasn't interested in, and I should check others instead.
+By messing around and guessing I found that the first default valid button (`1FDE` on the screenshot above) contains some random stuff I wasn't interested in, which meant I should check others instead.
 
 ![13](./img/13.png)
 
-In this bytecode there's a `Call Object **` instruction with opcode `21820000` and only one operand, that just starts playing another menu that you provide as its first operand. Knowing this, I started analysing what the other buttons were doing.
+In this bytecode there's a `Call Object **` instruction (opcode `21820000`). 
+This instruction simply starts playing another menu provided as its first operand. 
+Knowing this, I started analysing what the other buttons were doing.
 
 
 By observing all the other buttons I saw three types of buttons.
 
 ---
 
-Type 1, what most buttons are doing.
+**JumpTo48** - Most buttons will take you from the current menu to menu 48.
 
 ![6](./img/6.png)
 
-This button jumps from our current menu(`0`) to the menu `48`.
-
 ---
 
-Type 2.
+**JumpTo1** - This button takes you from the current menu to menu 1.
 
 ![7](./img/7.png)
 
-This button jumps from our current menu(`0`) to the next menu (`1`).
-
 ---
 
-Type 3.
+**JumpTo96** - This button takes you from the current menu to menu 96.
 
 ![8](./img/8.png)
 
-This button is jumping to clip 96, which I checked by playing the `BDMV\STREAM\00096.m2ts` file in VLC.
+Jumping from clip 0 to clip 96, huh? I checked the clip 96 by playing the `BDMV\STREAM\00096.m2ts` file in VLC and got this:
 
 ![9](./img/9.png)
 
 ---
 
-After that, I knew that there were only three destinations on the first menu
+At this point, I knew that there were only three destinations in the first menu
 * Clip 1
 * Clip 48
 * Clip 96 (`WRONG...`) 
 
-When I checked the menu buttons for clip 1 the pattern looked still the same so I checked menu 48 instead, and on clip 48 all the menu buttons were doing the same thing, jumping to menu 48 (or 96).
+When exploring other clips(1, 48) in VLC, all seemed to show the same controls prompting for flag.
 
-Seems odd, huh? I investigated it a bit and it seemed like we would always end up on the menu 96 if we are on the menu that's index is >= 48.
+Let's define this behaviour as a pattern that we can then match with other menus:
+* Jump to `CURRENT + 1` (1, in this case)
+* Jump to `96` (`WRONG...`)
+* Jump to `CURRENT + 48` (48, in this case)
 
-There's one exception though, that I just guessed. Remember how I opened stream 96 in vlc? Well, I did the same thing for clip 95 and got this.
+I didn't want to end up on scene 96, so i checked the menus 1 and 48.
+
+When i opened up the menu 1 in BDEdit i clearly saw the same pattern that i saw in menu 0.
+
+Moving on to menu 48, and the pattern observed was mostly the same, but there were only 2 type of buttons:
+* Jump to `CURRENT + 1` (49)
+* Jump to `96` (`WRONG`)
+Basically, the 2 types of buttons got merged and it was jumping to only 2 destinations.
+
+Seems odd, huh? 
+Instead of 3 directions of the codeflow we got only 2, and one of it was just showing the `WRONG` message.
+I investigated it a bit further, and it seemed like we would always end up on the menu 96 if we are on the menu that's index is >= 48.
+
+There's one exception though, which I just guessed. Remember how I opened stream 96 in vlc? Well, I did the same thing for clip 95 and got this:
 
 ![10](./img/10.png)
 
-From now on solving this challenge looked trivial, I needed to parse all the clips and find what buttons were leading us to clip 95.
+From now on solving this challenge seemed trivial, 
+I just needed to parse all the clips and find what buttons lead to clip 95.
 
 #### Solving
 
 While the idea was easy enough, I struggled for half an hour trying to parse the clips.
 
-I tried many things/libs to parse the clips and extract this bytecode from them but none of them worked so I decided that i should just do it by myself.
+I tried a bunch of libraries to parse the clips and extract the bytecode from them.
+However, none of them worked, so I decided I should just do it myself.
 
 ![11](./img/11.png)
 
-What I did is I grabbed the `Call Object` instruction opcode (`21820000`), converted it to BE bytes and searched in HxD within all the files from the disk.
+I grabbed the `Call Object` instruction opcode (`21820000`)
+and searched for it in HxD across the entire ISO.
 
-```py
->>> [hex(x) for x in int.to_bytes(0x21820000, 4, 'big')]
-['0x21', '0x82', '0x0', '0x0']
->>>
-```
-
-I ended up in the same m2ts files and got a lot of occurrences, from now on I assumed that this bytecode is indeed stored in the same file as the stream itself, so I should've parsed it from these files
+I ended up in the same m2ts files where I got a lot of occurrences. 
+I assumed that this bytecode is indeed stored in the same file as the stream itself, 
+so I should parse it directly from those files
 
 ![12](./img/12.png)
 
-The whole assembled instruction from this ASM looks like this.
+When assembled, this instruction looks like this:
 ```js
 >───────┐ ┌───────┐ ┌───────> │
 2182 0000 0000 0030 0000 0000 │ !......0....
@@ -206,7 +225,7 @@ for key in sorted(menus.keys()):
         menus_possibilities[key].append(possible_value)
 ```
 
-And now, I _finally_ solved the challenge by finding a path from menu 0 to menu 95.
+Now, the solution to this challenge is basically a path from menu 0 to menu 95:
 ```py
 # menu -> button
 path: dict[int, int] = dict()
@@ -230,7 +249,8 @@ for k, v in menus_possibilities.items():
     print('[+] Menu:', k, 'Button:', path[k], 'Next:', tgt)
 ```
 
-By looking at the output i tried to guess what alphabet i needed to use to convert these button ids to characters.
+Looking at the output below, I tried to guess what alphabet 
+I needed to use to convert these numbers to characters.
 ```js
 [+] Menu: 0 Button: 21 Next: 1
 [+] Menu: 1 Button: 12 Next: 2
@@ -242,21 +262,26 @@ By looking at the output i tried to guess what alphabet i needed to use to conve
 ...
 ```
 
-The first button id that i should click on is 21. Knowing that the flag starts with `SECCON{` i know that the first char is `S` and its id is 21, by looking at the button layout i tried to guess the alphabet.
+The first button that I should click on is 21. 
+Knowing that the flag starts with `SECCON{`, I know that the first char is `S` with ID 21.
+I looked at the button layout to decode the alphabet:
 ```js
 1 2 3 4 5 6 7 8 9 0
 Q W E R T Y U I O P
 A S D F G H J K L {
 Z X C V B N M _ - }
 ```
-And oh well, when i tried to concat it to one string `1234567890QWERTYUIOPASDFGHJKL{ZXCVBNM_-}` and find `S` there i got
+
+And oh well, when I concatenated it to a single string `1234567890QWERTYUIOPASDFGHJKL{ZXCVBNM_-}` 
+and searched for `S` there, I got:
 ```py
 >>> '1234567890QWERTYUIOPASDFGHJKL{ZXCVBNM_-}'.find('S')
 21
 >>>
 ```
 
-So what i did is i just grabbed all the button IDs and converted them to the chars using this alphabet.
+All I had left to do is to just grab all the button IDs 
+and convert them to characters using this alphabet:
 ```py
 ALPHABET = '1234567890QWERTYUIOPASDFGHJKL{ZXCVBNM_-}'
 FLAG: str = ''
@@ -270,7 +295,7 @@ for k, v in path.items():
 print('[+] Flag:', FLAG)
 ```
 
-And it worked just fine.
+Which _finally_ yielded me the flag.
 
 
 #### Flag
