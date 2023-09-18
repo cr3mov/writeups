@@ -273,7 +273,7 @@ And it worked just fine.
 #### Flag
 `SECCON{JWBH-58EL-QWRL-CLSW-UFRI-XUY3-YHKK-KFBV}`
 
-#### Full solver code
+#### Full solver source
 
 ```py
 from pathlib import Path
