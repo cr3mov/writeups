@@ -12,7 +12,7 @@ Perfect Blu (135 pt)
 
 No, I'm real!
 
-[perfect-blu.tar.gz](https://score.quals.seccon.jp/api/download?key=quals2023%2FPerfect_Blu%2Fperfect-blu.tar.gz) 367b6ed67dda0afbbc975ee70ee946b4c7bf9268
+[perfect-blu.tar.gz](./challenge/perfect-blu.tar.gz) 367b6ed67dda0afbbc975ee70ee946b4c7bf9268
 
 
 #### Overview
